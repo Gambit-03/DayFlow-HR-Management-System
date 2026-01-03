@@ -1,11 +1,11 @@
-import Signin from './pages/signin/signin'
+import Signin from "./pages/signin/signin";
 
 const App = () => {
   return (
     <>
-        <Signin />
+      <Signin />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
