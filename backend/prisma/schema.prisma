@@ -121,6 +121,7 @@ model User {
   attendances        Attendance[]
   timeOffRequests    TimeOffRequest[]
   approvedTimeOffRequests TimeOffRequest[] @relation("ApprovedByUser")
+  timeOffAllocations TimeOffAllocation[]
   salary             Salary?
   bankDetail         BankDetail?
   skills             UserSkill[]
