@@ -13,30 +13,267 @@ enum Role {
   USER
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  DIVORCED
+  WIDOWED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  ON_LEAVE
+}
+
+enum TimeOffRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ComputationType {
+  FIXED_AMOUNT
+  PERCENTAGE_OF_WAGE
+  PERCENTAGE_OF_BASIC
+}
+
 model Company {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  logoUrl     String?
+  code        String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  users       User[]
+  departments Department[]
+  locations   Location[]
+  timeOffTypes TimeOffType[]
+  skills      Skill[]
+}
+
+model Department {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  companyId   Int
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  employees   User[]
+}
+
+model Location {
   id        Int      @id @default(autoincrement())
-  name      String   @unique
-  logoUrl   String?
-  code      String   @unique
+  name      String
+  address   String?
+  city      String?
+  state     String?
+  country   String?
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  users     User[]
+  employees User[]
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  loginId      String   @unique
-  email        String   @unique
-  phone        String?
-  name         String
-  password     String
-  role         Role     @default(USER)
-  companyId    Int
-  company      Company  @relation(fields: [companyId], references: [id])
-  isFirstLogin Boolean  @default(true)
-  joinYear     Int
-  serialNumber Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                Int                @id @default(autoincrement())
+  loginId            String              @unique
+  email              String              @unique
+  phone              String?
+  name               String
+  password           String
+  role               Role                @default(USER)
+  companyId          Int
+  company            Company             @relation(fields: [companyId], references: [id])
+  isFirstLogin       Boolean             @default(true)
+  joinYear           Int
+  serialNumber       Int
+  profilePictureUrl  String?
+  jobPosition        String?
+  departmentId       Int?
+  department         Department?        @relation(fields: [departmentId], references: [id])
+  managerId          Int?
+  manager            User?               @relation("UserManager", fields: [managerId], references: [id])
+  managedEmployees   User[]              @relation("UserManager")
+  locationId         Int?
+  location           Location?           @relation(fields: [locationId], references: [id])
+  dateOfBirth        DateTime?
+  residingAddress    String?
+  nationality        String?
+  personalEmail      String?
+  gender             Gender?
+  maritalStatus      MaritalStatus?
+  dateOfJoining      DateTime?
+  about              String?
+  whatILoveAboutJob  String?
+  interestsAndHobbies String?
+  empCode            String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  attendances        Attendance[]
+  timeOffRequests    TimeOffRequest[]
+  approvedTimeOffRequests TimeOffRequest[] @relation("ApprovedByUser")
+  salary             Salary?
+  bankDetail         BankDetail?
+  skills             UserSkill[]
+  certifications     Certification[]
 }
 
+model Attendance {
+  id          Int             @id @default(autoincrement())
+  userId      Int
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date        DateTime        @db.Date
+  checkIn     DateTime?
+  checkOut    DateTime?
+  workHours   Decimal?        @db.Decimal(5, 2)
+  extraHours  Decimal?        @db.Decimal(5, 2)
+  status      AttendanceStatus @default(PRESENT)
+  breakTime   Decimal?        @db.Decimal(5, 2)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date])
+}
+
+model TimeOffType {
+  id          Int                @id @default(autoincrement())
+  name        String
+  companyId   Int
+  company     Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  isPaid      Boolean            @default(true)
+  maxDays     Int?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  requests    TimeOffRequest[]
+  allocations TimeOffAllocation[]
+}
+
+model TimeOffRequest {
+  id            Int                  @id @default(autoincrement())
+  userId        Int
+  user          User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  timeOffTypeId Int
+  timeOffType   TimeOffType          @relation(fields: [timeOffTypeId], references: [id])
+  startDate     DateTime             @db.Date
+  endDate       DateTime             @db.Date
+  allocation    Decimal              @db.Decimal(5, 2)
+  status        TimeOffRequestStatus @default(PENDING)
+  attachmentUrl String?
+  reason        String?
+  approvedBy    Int?
+  approvedByUser User?               @relation("ApprovedByUser", fields: [approvedBy], references: [id])
+  approvedAt    DateTime?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model TimeOffAllocation {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  timeOffTypeId Int
+  timeOffType   TimeOffType @relation(fields: [timeOffTypeId], references: [id], onDelete: Cascade)
+  allocatedDays Decimal  @db.Decimal(5, 2)
+  usedDays      Decimal  @default(0) @db.Decimal(5, 2)
+  year          Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([userId, timeOffTypeId, year])
+  @@index([userId])
+}
+
+model Salary {
+  id                Int               @id @default(autoincrement())
+  userId            Int               @unique
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  monthWage         Decimal           @db.Decimal(10, 2)
+  yearlyWage        Decimal           @db.Decimal(10, 2)
+  workingDaysPerWeek Decimal          @db.Decimal(3, 1)
+  breakTime         Decimal           @db.Decimal(5, 2)
+  pfRate            Decimal           @default(12) @db.Decimal(5, 2)
+  professionalTax   Decimal           @default(200) @db.Decimal(10, 2)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  components        SalaryComponent[]
+}
+
+model SalaryComponent {
+  id              Int             @id @default(autoincrement())
+  salaryId        Int
+  salary          Salary          @relation(fields: [salaryId], references: [id], onDelete: Cascade)
+  name            String
+  computationType ComputationType
+  value           Decimal         @db.Decimal(10, 2)
+  amount          Decimal         @db.Decimal(10, 2)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([salaryId])
+}
+
+model BankDetail {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountNumber String
+  bankName      String
+  ifscCode      String
+  panNumber     String?
+  uanNumber     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Skill {
+  id        Int         @id @default(autoincrement())
+  name      String
+  companyId Int
+  company   Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  users     UserSkill[]
+
+  @@unique([name, companyId])
+}
+
+model UserSkill {
+  id        Int      @id @default(autoincrement())
+  userId   Int
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skillId  Int
+  skill    Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, skillId])
+  @@index([userId])
+}
+
+model Certification {
+  id                  Int      @id @default(autoincrement())
+  userId              Int
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name                String
+  issuingOrganization String?
+  issueDate           DateTime?
+  expiryDate          DateTime?
+  certificateUrl      String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([userId])
+}
