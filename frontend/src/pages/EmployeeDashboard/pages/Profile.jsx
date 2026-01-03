@@ -4,37 +4,80 @@ import {
   Typography,
   Card,
   CardContent,
+  Avatar,
   Grid,
+  Tabs,
+  Tab,
+  Divider,
+  TextField,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
 } from "@mui/material";
 
 /* -------- Mock Employee Data -------- */
-const employeeProfile = {
-  name: "Anshu Chauhan",
-  empCode: "EMP1023",
-  company: "DayFlow Pvt Ltd",
+const mockEmployee = {
+  name: "Anshu Yadav",
   position: "Software Engineer",
-  department: "Engineering",
+  email: "anshu.yadav@dayflow.com",
+  mobile: "+91 98765 43210",
+  company: "DayFlow Pvt Ltd",
   manager: "Rahul Sharma",
-  email: "anshu.chauhan@dayflow.com",
-  phone: "+91 98765 43210",
+  department: "Engineering",
   location: "Bengaluru, India",
-  salary: "₹8,00,000 / year",
-  gender: "Female",
-  nationality: "Indian",
-  maritalStatus: "Single",
-  address: "Bangalore, Karnataka, India",
-  bankName: "State Bank of India",
-  accountNumber: "XXXXXX1234",
-  emergencyContact: "+91 91234 56789",
-  medical: "AB+",
+  address: "123, MG Road, Bengaluru, Karnataka, India",
+  image: "https://i.pravatar.cc/150?img=47",
+  resume: "Anshu_Yadav_Resume.pdf",
+
+  privateInfo: {
+    gender: "Female",
+    nationality: "Indian",
+    maritalStatus: "Single",
+    emergencyContact: "+91 91234 56789",
+    medical: "AB+",
+  },
+
+  salaryInfo: {
+    salary: "₹8,00,000 / year",
+    payrollId: "PAY2026-0098",
+    bankName: "State Bank of India",
+    accountNumber: "XXXXXX1234",
+    taxId: "PANABCDE1234",
+  },
+
+  security: {
+    empCode: "EMP1023",
+    accountStatus: "Active",
+    lastLogin: "02 Jan 2026, 10:30 AM",
+  },
 };
 
 const Profile = () => {
-  const [open, setOpen] = useState(false);
+  const [tab, setTab] = useState(0);
+  const [editable, setEditable] = useState(false);
+  const [employee, setEmployee] = useState(mockEmployee);
+
+  /* -------- Handle Field Change -------- */
+  const handleChange = (field, value) => {
+    setEmployee({ ...employee, [field]: value });
+  };
+
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (ev) =>
+        setEmployee({ ...employee, image: ev.target.result });
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
+  const handleSave = () => {
+    setEditable(false);
+    alert("Profile updated successfully!");
+  };
+
+  const handleCancel = () => {
+    setEmployee(mockEmployee); // reset to initial mock data
+    setEditable(false);
+  };
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -42,63 +85,183 @@ const Profile = () => {
         Employee Profile
       </Typography>
 
-      
-      <Card>
-        <CardContent>
-          <Grid container spacing={2}>
-            <ProfileItem label="Employee Name" value={employeeProfile.name} />
-            <ProfileItem label="Employee Code" value={employeeProfile.empCode} />
-            <ProfileItem label="Company Name" value={employeeProfile.company} />
-            <ProfileItem label="Job Position" value={employeeProfile.position} />
-            <ProfileItem label="Department" value={employeeProfile.department} />
-            <ProfileItem label="Manager" value={employeeProfile.manager} />
-            <ProfileItem label="Email" value={employeeProfile.email} />
-            <ProfileItem label="Mobile Number" value={employeeProfile.phone} />
-            <ProfileItem label="Location" value={employeeProfile.location} />
-            <ProfileItem label="Salary" value={employeeProfile.salary} />
-            <ProfileItem label="Gender" value={employeeProfile.gender} />
-            <ProfileItem label="Nationality" value={employeeProfile.nationality} />
-            <ProfileItem label="Marital Status" value={employeeProfile.maritalStatus} />
-            <ProfileItem label="Address" value={employeeProfile.address} />
-            <ProfileItem label="Bank Name" value={employeeProfile.bankName} />
-            <ProfileItem label="Account Number" value={employeeProfile.accountNumber} />
-            <ProfileItem label="Emergency Contact" value={employeeProfile.emergencyContact} />
-            <ProfileItem label="Medical Info" value={employeeProfile.medical} />
-          </Grid>
+      <Grid container spacing={2}>
+        {/* ===== LEFT CARD (Profile Summary) ===== */}
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardContent>
+              <Box textAlign="center" mb={2}>
+                <input
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id="profile-pic-upload"
+                  type="file"
+                  onChange={handleImageChange}
+                  disabled={!editable}
+                />
+                <label htmlFor="profile-pic-upload">
+                  <Avatar
+                    src={employee.image}
+                    sx={{
+                      width: 120,
+                      height: 120,
+                      margin: "auto",
+                      cursor: editable ? "pointer" : "default",
+                    }}
+                  />
+                </label>
+              </Box>
 
-          {/* Resume Button */}
-          <Box mt={3} textAlign="center">
-            <Button variant="contained" onClick={() => setOpen(true)}>
-              View Resume
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
+              <Typography variant="h6">{employee.name}</Typography>
+              <Typography color="text.secondary">{employee.position}</Typography>
 
-      
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
-        <DialogTitle>Employee Resume</DialogTitle>
-        <DialogContent dividers>
-          <Typography>
-            📄 Resume Preview Placeholder
-          </Typography>
-          <Typography variant="body2" color="text.secondary" mt={1}>
-            (Later this can show PDF using iframe or download link)
-          </Typography>
-        </DialogContent>
-      </Dialog>
+              <Divider sx={{ my: 2 }} />
+
+              {/* Email is READ-ONLY */}
+              <ProfileField label="Email" value={employee.email} />
+
+              {/* Mobile is EDITABLE */}
+              <ProfileField
+                label="Mobile"
+                value={employee.mobile}
+                editable={editable}
+                onChange={(val) => handleChange("mobile", val)}
+              />
+
+              <ProfileField label="Company" value={employee.company} />
+              <ProfileField label="Manager" value={employee.manager} />
+              <ProfileField label="Department" value={employee.department} />
+              <ProfileField label="Location" value={employee.location} />
+
+              {/* Address is EDITABLE */}
+              <ProfileField
+                label="Address"
+                value={employee.address}
+                editable={editable}
+                onChange={(val) => handleChange("address", val)}
+              />
+
+              {/* Save / Cancel Buttons */}
+              {editable && (
+                <Box
+                  mt={2}
+                  textAlign="center"
+                  display="flex"
+                  justifyContent="center"
+                  gap={1}
+                >
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={handleSave}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              )}
+
+              {/* Edit Button */}
+              {!editable && (
+                <Box mt={2} textAlign="center">
+                  <Button variant="outlined" onClick={() => setEditable(true)}>
+                    Edit Profile
+                  </Button>
+                </Box>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* ===== RIGHT CARD (Tabbed Details) ===== */}
+        <Grid item xs={12} md={8}>
+          <Card sx={{ height: "100%" }}>
+            <Tabs
+              value={tab}
+              onChange={(e, newValue) => setTab(newValue)}
+              variant="scrollable"
+            >
+              <Tab label="Resume" />
+              <Tab label="Private Info" />
+              <Tab label="Salary Info" />
+              <Tab label="Security" />
+            </Tabs>
+
+            <CardContent>
+              {tab === 0 && (
+                <Box>
+                  <Typography variant="subtitle1">Resume</Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  <Typography>{employee.resume}</Typography>
+                </Box>
+              )}
+
+              {tab === 1 && (
+                <Box>
+                  <Typography variant="subtitle1">Private Information</Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  {Object.entries(employee.privateInfo).map(([key, value]) => (
+                    <ProfileField key={key} label={formatLabel(key)} value={value} />
+                  ))}
+                </Box>
+              )}
+
+              {tab === 2 && (
+                <Box>
+                  <Typography variant="subtitle1">Salary & Payroll</Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  {Object.entries(employee.salaryInfo).map(([key, value]) => (
+                    <ProfileField key={key} label={formatLabel(key)} value={value} />
+                  ))}
+                </Box>
+              )}
+
+              {tab === 3 && (
+                <Box>
+                  <Typography variant="subtitle1">Security</Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  {Object.entries(employee.security).map(([key, value]) => (
+                    <ProfileField key={key} label={formatLabel(key)} value={value} />
+                  ))}
+                </Box>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
 
+/* -------- Reusable Profile Field -------- */
+const ProfileField = ({ label, value, editable = false, onChange }) => {
+  return (
+    <Box mb={1}>
+      <Typography variant="caption" color="text.secondary">
+        {label}
+      </Typography>
+      {editable ? (
+        <TextField
+          fullWidth
+          size="small"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      ) : (
+        <Typography variant="body2">{value}</Typography>
+      )}
+    </Box>
+  );
+};
 
-const ProfileItem = ({ label, value }) => (
-  <Grid item xs={12} sm={6} md={4}>
-    <Typography variant="subtitle2" color="text.secondary">
-      {label}
-    </Typography>
-    <Typography variant="body1">{value}</Typography>
-  </Grid>
-);
+/* -------- Format Labels -------- */
+const formatLabel = (text) =>
+  text.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
 
 export default Profile;
