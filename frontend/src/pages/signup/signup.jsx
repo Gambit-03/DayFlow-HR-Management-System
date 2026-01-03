@@ -68,65 +68,59 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSuccessMsg("");
 
-    if (!validateForm()) return;
+    if (validate()) {
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            companyName: formData.company,
+            fullName: formData.name,
+            phone: formData.phone,
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
 
-    try {
-      const res = await fetch("http://localhost:5000/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ company, name, phone, email, password }),
-      });
+        const data = await res.json();
 
-      const data = await res.json();
+        if (!res.ok) {
+          setErrors({ general: data.message || "Signup failed" });
+          return;
+        }
 
-      if (!res.ok) {
-        showSnackbar(data.message || "Signup failed", "error");
-        return;
+        setSuccessMsg("Signup successful!");
+        setFormData({
+          company: "",
+          name: "",
+          phone: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+        setErrors({});
+      } catch (error) {
+        setErrors({ general: "Server error. Try again later." });
       }
-
-      showSnackbar("Signup successful!", "success");
-      // Clear form on success
-      setCompany("");
-      setName("");
-      setPhone("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-    } catch (error) {
-      showSnackbar("Server error. Try again later.", "error");
     }
   };
 
   return (
-    <>
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{
-          justifyContent: "center",
-          alignItems: "center",
-          display: "flex",
-          height: "100vh",
-          flexDirection: "column",
-          gap: "20px",
-        }}
-        autoComplete="off"
-      >
-        <h1>Sign Up</h1>
-        <TextField
-          id="company"
-          label="Company Name"
-          variant="outlined"
-          type="text"
-          value={company}
-          onChange={(e) => setCompany(e.target.value)}
-          sx={{ width: "300px" }}
-        />
-        <TextField
-          id="name"
+    <div className="signup-container d-flex justify-content-center align-items-center">
+      <form className="signup-form p-4 shadow" onSubmit={handleSubmit}>
+        <h2 className="mb-4 text-center">Signup</h2>
+
+        {successMsg && <Alert severity="success">{successMsg}</Alert>}
+        {errors.general && <Alert severity="error">{errors.general}</Alert>}
+
+        <CompanyInput value={formData.company} onChange={handleChange} />
+        {errors.company && <Alert severity="error">{errors.company}</Alert>}
+
+        <TextInput
           label="Full Name"
           variant="outlined"
           type="text"
