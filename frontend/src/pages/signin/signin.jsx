@@ -1,7 +1,11 @@
-import React from "react";
+import Button from "@mui/material/Button";
 
 const Signin = () => {
-  return <div>signin</div>;
+  return (
+    <>
+      <Button variant="contained">Signin</Button>
+    </>
+  );
 };
 
 export default Signin;
