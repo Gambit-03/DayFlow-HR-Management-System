@@ -43,7 +43,7 @@ const Signin = () => {
     if (!validateForm()) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/signin", {
+      const res = await fetch("http://localhost:5000/api/auth/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

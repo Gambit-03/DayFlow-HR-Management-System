@@ -50,22 +50,46 @@ const Signup = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccessMsg("");
 
     if (validate()) {
-      setSuccessMsg("Signup successful!");
-      console.log(formData);
-      setFormData({
-        company: "",
-        name: "",
-        phone: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-      setErrors({});
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            companyName: formData.company,
+            fullName: formData.name,
+            phone: formData.phone,
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setErrors({ general: data.message || "Signup failed" });
+          return;
+        }
+
+        setSuccessMsg("Signup successful!");
+        setFormData({
+          company: "",
+          name: "",
+          phone: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+        setErrors({});
+      } catch (error) {
+        setErrors({ general: "Server error. Try again later." });
+      }
     }
   };
 
@@ -75,6 +99,7 @@ const Signup = () => {
         <h2 className="mb-4 text-center">Signup</h2>
 
         {successMsg && <Alert severity="success">{successMsg}</Alert>}
+        {errors.general && <Alert severity="error">{errors.general}</Alert>}
 
         <CompanyInput
           value={formData.company}
