@@ -1,55 +1,69 @@
-import React, { useState } from "react";
-import "./Signup.css";
-import CompanyInput from "./CompanyInput";
-import TextInput from "./TextInput";
-import PasswordInput from "./PasswordInput";
-import { Button, Alert } from "@mui/material";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import "./Signup.css";
 
 const Signup = () => {
-  const [formData, setFormData] = useState({
-    company: "",
-    name: "",
-    phone: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+  const [company, setCompany] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "error", // error | success | warning | info
   });
 
-  const [errors, setErrors] = useState({});
-  const [successMsg, setSuccessMsg] = useState("");
-
-  const handleChange = (name, value) => {
-    setFormData({ ...formData, [name]: value });
+  const showSnackbar = (message, severity = "error") => {
+    setSnackbar({
+      open: true,
+      message,
+      severity,
+    });
   };
 
-  const validate = () => {
-    const newErrors = {};
+  const validateForm = () => {
+    if (
+      !company ||
+      !name ||
+      !phone ||
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
+      showSnackbar("All fields are required", "error");
+      return false;
+    }
 
-    if (!formData.company.trim())
-      newErrors.company = "Company Name is required";
-    if (!formData.name.trim()) newErrors.name = "Full Name is required";
+    if (!/^\d{10}$/.test(phone)) {
+      showSnackbar("Phone must be 10 digits", "error");
+      return false;
+    }
 
-    if (!formData.phone.trim()) newErrors.phone = "Phone is required";
-    else if (!/^\d{10}$/.test(formData.phone))
-      newErrors.phone = "Phone must be 10 digits";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      showSnackbar("Invalid email address", "error");
+      return false;
+    }
 
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-      newErrors.email = "Invalid email address";
+    if (password.length < 8) {
+      showSnackbar("Password must be at least 8 characters", "error");
+      return false;
+    }
 
-    if (!formData.password) newErrors.password = "Password is required";
-    else if (formData.password.length < 8)
-      newErrors.password = "Password must be at least 8 characters";
+    if (password !== confirmPassword) {
+      showSnackbar("Passwords do not match", "error");
+      return false;
+    }
 
-    if (!formData.confirmPassword)
-      newErrors.confirmPassword = "Confirm Password is required";
-    else if (formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = "Passwords do not match";
-
-    setErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0;
+    return true;
   };
 
   const handleSubmit = async (e) => {
@@ -108,61 +122,66 @@ const Signup = () => {
 
         <TextInput
           label="Full Name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
+          variant="outlined"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          sx={{ width: "300px" }}
         />
-        {errors.name && <Alert severity="error">{errors.name}</Alert>}
-
-        <TextInput
+        <TextField
+          id="phone"
           label="Phone"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
+          variant="outlined"
+          type="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          sx={{ width: "300px" }}
         />
-        {errors.phone && <Alert severity="error">{errors.phone}</Alert>}
-
-        <TextInput
+        <TextField
+          id="email"
           label="Email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
+          variant="outlined"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          sx={{ width: "300px" }}
         />
-        {errors.email && <Alert severity="error">{errors.email}</Alert>}
-
-        <PasswordInput
+        <TextField
+          id="password"
           label="Password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
+          variant="outlined"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          sx={{ width: "300px" }}
         />
-        {errors.password && <Alert severity="error">{errors.password}</Alert>}
-
-        <PasswordInput
+        <TextField
+          id="confirmPassword"
           label="Confirm Password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleChange}
+          variant="outlined"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          sx={{ width: "300px" }}
         />
-        {errors.confirmPassword && (
-          <Alert severity="error">{errors.confirmPassword}</Alert>
-        )}
-
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          className="mt-3"
-        >
-          Sign Up
-        </Button>
-
-        <p className="mt-3 text-center">
+        <p>
           Already have an account? <Link to="/">Sign In</Link>
         </p>
-      </form>
-    </div>
+        <Button type="submit" variant="contained" sx={{ width: "300px" }}>
+          Sign Up
+        </Button>
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={4000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert severity={snackbar.severity} variant="filled">
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      </Box>
+    </>
   );
 };
 
