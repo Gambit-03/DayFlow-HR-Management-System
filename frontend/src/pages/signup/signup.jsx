@@ -4,6 +4,7 @@ import CompanyInput from "./CompanyInput";
 import TextInput from "./TextInput";
 import PasswordInput from "./PasswordInput";
 import { Button, Alert } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +26,8 @@ const Signup = () => {
   const validate = () => {
     const newErrors = {};
 
-    if (!formData.company.trim()) newErrors.company = "Company Name is required";
+    if (!formData.company.trim())
+      newErrors.company = "Company Name is required";
     if (!formData.name.trim()) newErrors.name = "Full Name is required";
 
     if (!formData.phone.trim()) newErrors.phone = "Phone is required";
@@ -50,22 +52,46 @@ const Signup = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccessMsg("");
 
     if (validate()) {
-      setSuccessMsg("Signup successful!");
-      console.log(formData);
-      setFormData({
-        company: "",
-        name: "",
-        phone: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-      setErrors({});
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            companyName: formData.company,
+            fullName: formData.name,
+            phone: formData.phone,
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setErrors({ general: data.message || "Signup failed" });
+          return;
+        }
+
+        setSuccessMsg("Signup successful!");
+        setFormData({
+          company: "",
+          name: "",
+          phone: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+        setErrors({});
+      } catch (error) {
+        setErrors({ general: "Server error. Try again later." });
+      }
     }
   };
 
@@ -75,11 +101,9 @@ const Signup = () => {
         <h2 className="mb-4 text-center">Signup</h2>
 
         {successMsg && <Alert severity="success">{successMsg}</Alert>}
+        {errors.general && <Alert severity="error">{errors.general}</Alert>}
 
-        <CompanyInput
-          value={formData.company}
-          onChange={handleChange}
-        />
+        <CompanyInput value={formData.company} onChange={handleChange} />
         {errors.company && <Alert severity="error">{errors.company}</Alert>}
 
         <TextInput
@@ -135,7 +159,7 @@ const Signup = () => {
         </Button>
 
         <p className="mt-3 text-center">
-          Already have an account? <a href="#">Sign In</a>
+          Already have an account? <Link to="/">Sign In</Link>
         </p>
       </form>
     </div>

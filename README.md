@@ -1,6 +1,16 @@
 # DayFlow HR Management System
 
-A comprehensive HR Management System built with React.js, Node.js, Express.js, Prisma, and Neon PostgreSQL database.
+DayFlow is a centralized platform designed to digitize and automate the manual overhead of managing a workforce. It replaces spreadsheets and paper forms with a streamlined digital workflow.
+
+## Key Features
+
+- **Automates Onboarding:** The system removes manual ID creation by automatically generating unique credentials based on employee names and joining dates.
+
+- **Visualizes Workforce Status:** It provides a real-time "bird's-eye view" of who is in the office, who is absent, and who is on leave using color-coded status indicators.
+
+- **Simplifies Leave Management:** It creates a formal bridge between employees and HR, allowing for digital leave applications with required documentation (like medical certificates) and a one-click approval/rejection system.
+
+- **Calculates Complex Payroll:** It takes the "math stress" out of HR by automatically computing salary components (Basic, HRA, PF, etc.) and adjusting pay based on attendance records.
 
 ## 🚀 Tech Stack
 
@@ -17,6 +27,16 @@ A comprehensive HR Management System built with React.js, Node.js, Express.js, P
 - **Neon** - Serverless PostgreSQL database
 - **JWT** - Authentication
 - **bcryptjs** - Password hashing
+
+### Built With
+
+* [![React][React.js]][React-url]
+* [![Node][Node.js]][Node-url]
+* [![Express][Express.js]][Express-url]
+* [![Prisma][Prisma.io]][Prisma-url]
+* [![Neon][Neon.tech]][Neon-url]
+* [![MUI][MUI.com]][MUI-url]
+* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 
 ## 📋 Prerequisites
 
@@ -360,17 +380,44 @@ REACT_APP_API_URL=http://localhost:5000
 
 ## 📄 License
 
-ISC
+Distributed under the ISC License. See [ISC](https://www.isc.org/licenses/) for more information.
 
 ## 👥 Authors
 
-- **Gambit-03**
+- [@Gambit-03](https://github.com/Gambit-03)
+- [@Karnav018](https://github.com/Karnav018)
+- [@Solanki-Prem](https://github.com/Solanki-Prem)
+- [@Ashmitayadav004](https://github.com/Ashmitayadav004)
 
 ## 🙏 Acknowledgments
 
-- Built with React, Node.js, Express, Prisma, and Neon
-- UI components from Material UI and Bootstrap
+- [Neon Serverless Postgres](https://neon.com/)
+- [Prisma ORM](https://www.prisma.io/)
+- [Material UI Components](https://mui.com/)
+- [Odoo HR Management Patterns](https://www.odoo.com/)
+- [Image Shields](https://shields.io/)
 
 ---
 
 **Need Help?** Check the troubleshooting section or open an issue on GitHub.
+
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+
+[Node.js]: https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white
+[Node-url]: https://nodejs.org/
+
+[Express.js]: https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white
+[Express-url]: https://expressjs.com/
+
+[Prisma.io]: https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white
+[Prisma-url]: https://www.prisma.io/
+
+[Neon.tech]: https://img.shields.io/badge/Neon-00E599?style=for-the-badge&logo=Neon&logoColor=black
+[Neon-url]: https://neon.tech/
+
+[MUI.com]: https://img.shields.io/badge/MUI-007FFF?style=for-the-badge&logo=mui&logoColor=white
+[MUI-url]: https://mui.com/
+
+[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
+[Bootstrap-url]: https://getbootstrap.com

@@ -1,10 +1,10 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import "./signin.css";
 
 const Signin = () => {
@@ -43,7 +43,7 @@ const Signin = () => {
     if (!validateForm()) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/signin", {
+      const res = await fetch("http://localhost:5000/api/auth/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -101,7 +101,7 @@ const Signin = () => {
           sx={{ width: "300px" }}
         />
         <p>
-          Not registered? <Link href="/signup">Sign Up</Link>
+          Not registered? <Link to="/signup">Sign Up</Link>
         </p>
         <Button type="submit" variant="contained" sx={{ width: "300px" }}>
           Sign In
