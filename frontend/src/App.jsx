@@ -17,7 +17,7 @@ const App = () => {
 export default App;
 
 
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import { Routes, Route } from "react-router-dom";
 
 // import Dashboard from "./pages/EmployeeDashboard/pages/Dashboard";
 // import Profile from "./pages/EmployeeDashboard/pages/Profile";
@@ -28,16 +28,14 @@ export default App;
 
 // const App = () => {
 //   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/" element={<Dashboard />} />
-//         <Route path="/profile" element={<Profile />} />
-//         <Route path="/leave" element={<Leave />} />
-//         <Route path="/attendance" element={<Attendance />} />
-//         <Route path="/logout" element={<Logout />} />
-//         <Route path="/signin" element={<Signin />} />
-//       </Routes>
-//     </Router>
+//     <Routes>
+//       <Route path="/" element={<Dashboard />} />
+//       <Route path="/profile" element={<Profile />} />
+//       <Route path="/leave" element={<Leave />} />
+//       <Route path="/attendance" element={<Attendance />} />
+//       <Route path="/logout" element={<Logout />} />
+//       <Route path="/signin" element={<Signin />} />
+//     </Routes>
 //   );
 // };
 
