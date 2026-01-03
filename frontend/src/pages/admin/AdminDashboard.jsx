@@ -13,14 +13,12 @@ import {
   EventAvailable as AttendanceIcon,
   CalendarToday as LeaveIcon,
   Payment as PayrollIcon,
-  BarChart as AnalyticsIcon,
   ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
 
 const AdminDashboard = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [mainTab, setMainTab] = useState(0);
-  const [employeeTab, setEmployeeTab] = useState(0);
 
   const handleEmployeeSelect = (employee) => {
     setSelectedEmployee(employee);

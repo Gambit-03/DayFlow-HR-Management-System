@@ -11,10 +11,8 @@ import {
   Divider,
 } from "@mui/material";
 import {
-  TrendingUp,
   People,
   EventAvailable,
-  CalendarToday,
   Payment,
   CheckCircle,
   Cancel,

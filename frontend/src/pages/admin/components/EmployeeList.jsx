@@ -12,15 +12,11 @@ import {
   Chip,
   MenuItem,
   Grid,
-  Card,
-  CardContent,
-  IconButton,
   CircularProgress,
   Alert,
 } from "@mui/material";
 import {
   Search as SearchIcon,
-  FilterList as FilterIcon,
   Person as PersonIcon,
 } from "@mui/icons-material";
 import employeeService from "../../../services/employeeService";
