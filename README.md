@@ -94,7 +94,7 @@ cd DayFlow-HR-Management-System
    npm run prisma:migrate
    ```
    
-   When prompted, enter a migration name (e.g., `init_hr_system`)
+   When prompted, enter a migration name 
 
 6. **Seed the database (create initial admin user):**
    ```bash
@@ -198,7 +198,7 @@ DayFlow-HR-Management-System/
 │   ├── utils/             # Utility functions
 │   ├── index.js           # Server entry point
 │   ├── package.json
-│   └── .env               # Environment variables (not in git)
+│   └── .env               
 ├── frontend/
 │   ├── public/
 │   ├── src/
@@ -206,7 +206,7 @@ DayFlow-HR-Management-System/
 │   │   ├── App.jsx
 │   │   └── index.js
 │   ├── package.json
-│   └── .env               # Environment variables (not in git)
+│   └── .env              
 └── README.md
 ```
 
