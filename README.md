@@ -358,25 +358,6 @@ JWT_EXPIRES_IN=7d
 REACT_APP_API_URL=http://localhost:5000
 ```
 
-## 🔒 Security Notes
-
-- Never commit `.env` files to git (already in `.gitignore`)
-- Use strong `JWT_SECRET` in production
-- Change default admin password after first login
-- Use environment-specific `.env` files for different deployments
-
-## 📖 Additional Documentation
-
-- `backend/TESTING_GUIDE.md` - Complete API testing guide
-- `backend/BACKEND_REVIEW.md` - Backend architecture review
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ## 📄 License
 
@@ -399,7 +380,7 @@ Distributed under the ISC License. See [ISC](https://www.isc.org/licenses/) for 
 
 ---
 
-**Need Help?** Check the troubleshooting section or open an issue on GitHub.
+
 
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
